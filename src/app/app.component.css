@@ -1,0 +1,78 @@
+table.iksweb {
+	width: 100%;
+	border-collapse:collapse;
+	border-spacing:0;
+	height: auto;
+}
+table.iksweb,table.iksweb td, table.iksweb th {
+	border: 1px solid #595959;
+}
+table.iksweb td,table.iksweb th {
+	min-height:35px;
+  padding: 3px;
+	width: 30px;
+	height: 35px;
+}
+table.iksweb th {
+	background: #347c99;
+	color: #fff;
+	font-weight: normal;
+}
+.table {
+  margin-inline: 10%;
+  overflow: hidden;
+  overflow-x: scroll;
+}
+.main, h1 {
+  text-align: center;
+}
+input, select {
+  margin-bottom: 14px;
+  margin-inline: auto;
+  display: block;
+}
+input {
+  background-color: #67a3ff;
+  width: 20%;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 16px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+select {
+  background-color: #67a3ff;
+  width: 25%;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 16px;
+  appearance: none;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+h1 {
+  color: #3587ff;
+  font-size: 36px;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+p {
+  text-align: center;
+  margin-inline: 10%;
+  font-size: 18px;
+  color: #0050be;
+}
+
+@media screen and (max-width: 1020px) {
+  input {
+    width: 70%;
+  }
+  select {
+    width: 75%;
+  }
+}
