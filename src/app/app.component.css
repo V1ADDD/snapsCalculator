@@ -67,6 +67,44 @@ p {
   font-size: 18px;
   color: #0050be;
 }
+.circle {
+  position: fixed;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+  top: 20px;
+  right: 20px;
+  bottom: 20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #e2e2e2;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.circle-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.text {
+  color: #3587ff;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.circle:hover {
+  transform: scale(90%);
+}
+
+.circle.clicked {
+  background-color: #3587ff;
+}
+
+.circle.clicked > .circle-content > .text {
+  color: #e2e2e2;
+}
 
 @media screen and (max-width: 1020px) {
   input {

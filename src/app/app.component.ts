@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
 
 interface Glasses {
   name: string;
@@ -36,8 +37,10 @@ export class AppComponent {
   dates: DateUnlocks[] = [];
   sumGot: number = 0;
   skippedDatesArray: string[] = [];
+  priceMultiplier: number = 1;
+  currency: string = "SNPS";
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.glasses = [
       {
         name: "Newbie",
@@ -211,11 +214,36 @@ export class AppComponent {
       // @ts-ignore
       document.getElementById("sum" + date.id).textContent = sum;
       // @ts-ignore
-      document.getElementById("sumSNPS" + date.id).textContent = (sum * this.chosenGlassesInfo.earning).toFixed(2)
+      document.getElementById("sumSNPS" + date.id).textContent = (sum * this.chosenGlassesInfo.earning * this.priceMultiplier).toFixed(2)
       // @ts-ignore
-      document.getElementById("sumFixed" + date.id).textContent = ((sum - this.chosenGlassesInfo.fix) * this.chosenGlassesInfo.earning).toFixed(2);
-      this.sumGot += +((sum - this.chosenGlassesInfo.fix) * this.chosenGlassesInfo.earning).toFixed(2);
+      document.getElementById("sumFixed" + date.id).textContent = ((sum - this.chosenGlassesInfo.fix) * this.chosenGlassesInfo.earning * this.priceMultiplier).toFixed(2);
+      this.sumGot += +((sum - this.chosenGlassesInfo.fix) * this.chosenGlassesInfo.earning * this.priceMultiplier).toFixed(2);
     }
   }
 
+  changeCurrency() {
+    if (this.priceMultiplier === 1) {
+      const url = "https://sheets.googleapis.com/v4/spreadsheets/1yZsklZ4QRTtmrUoc_toeQQD_DgLJjYz4FSxINGBykYQ/values/A2";
+      const headers = {
+        'Accepts': 'application/json',
+        'Authorization': 'Bearer AIzaSyBLEu5A3nWdvv3rBlYHJedg07AXpe18uy4'
+      };
+      this.http.get(url, {headers: headers})
+        .subscribe(
+          (data: any) => {
+            console.log(data);
+          },
+          (error: any) => {
+            console.error(error);
+          }
+        );
+
+      this.priceMultiplier = 0.01; // parse price SNPS
+      this.currency = "USD";
+    } else {
+      this.priceMultiplier = 1;
+      this.currency = "SNPS";
+    }
+    this.recountTable();
+  }
 }

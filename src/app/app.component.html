@@ -1,3 +1,8 @@
+<div class="circle" [class.clicked]="priceMultiplier === 1" id="myCircle" (click)="changeCurrency()">
+  <div class="circle-content">
+    <span class="text">{{currency}}</span>
+  </div>
+</div>
 <div class="main">
   <form>
     <h1>Калькулятор разлоков</h1>
@@ -17,7 +22,7 @@
     <p>!!! При пропуске 3ех дней подряд, очки ломаются и смогут быть отремонтированы только за 70% от их стоимости !!!</p>
   </form>
 </div>
-<h1>Вы заработаете {{sumGot}} SNPS</h1>
+<h1>Вы заработаете {{sumGot | number:'1.0-2'}} {{currency}}</h1>
 <p>В таблице вы можете явно видеть как разбиваются ваши разлоки, в зависимости от соответствующего показателя по дням. Также можете изучить вариант пропуска дней в целях получения снапсов из заблокированного кошелька и увидеть как это повлияет на будущий доход.</p>
 <div class="table">
   <table class="iksweb">
@@ -25,8 +30,8 @@
       <tr>
         <td>Дата</td>
         <td [attr.colspan]="dates.length">Разбив разлока</td>
-        <td>Заработок (%)</td>
-        <td>Заработок (SNPS)</td>
+        <td>Заработок (1=100%)</td>
+        <td>Заработок ({{currency}})</td>
         <td>Чистыми</td>
       </tr>
       <tr *ngFor="let date of dates">
