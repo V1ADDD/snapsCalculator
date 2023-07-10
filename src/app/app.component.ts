@@ -223,22 +223,7 @@ export class AppComponent {
 
   changeCurrency() {
     if (this.priceMultiplier === 1) {
-      const url = "https://sheets.googleapis.com/v4/spreadsheets/1yZsklZ4QRTtmrUoc_toeQQD_DgLJjYz4FSxINGBykYQ/values/A2";
-      const headers = {
-        'Accepts': 'application/json',
-        'Authorization': 'Bearer AIzaSyBLEu5A3nWdvv3rBlYHJedg07AXpe18uy4'
-      };
-      this.http.get(url, {headers: headers})
-        .subscribe(
-          (data: any) => {
-            console.log(data);
-          },
-          (error: any) => {
-            console.error(error);
-          }
-        );
-
-      this.priceMultiplier = 0.01; // parse price SNPS
+      this.priceMultiplier = 0.095; // make parse price SNPS
       this.currency = "USD";
     } else {
       this.priceMultiplier = 1;
