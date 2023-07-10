@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {delay} from "rxjs";
 
 interface Glasses {
   name: string;
@@ -223,12 +224,33 @@ export class AppComponent {
 
   changeCurrency() {
     if (this.priceMultiplier === 1) {
-      this.priceMultiplier = 0.0095; // parse price SNPS
-      this.currency = "USD";
+      const url = "https://www.geckoterminal.com/ru/bsc/pools/0x863e681f97005f5a4c2a1e504f6e4cd0e4d4cca9";
+
+      let responseClone: Response; // 1
+      fetch(url)
+      .then(function (response) {
+          responseClone = response.clone(); // 2
+          return response.json();
+      })
+      .then(function (data) {
+      }, (rejectionReason) => { // 3
+          responseClone.text() // 5
+          .then((bodyText) => {
+              const input = bodyText.slice(4300,4500);
+              const startText = 'Цена SNPS/BUSD сегодня — ';
+              const endText = ' $';
+              const startIndex = input.indexOf(startText);
+              const endIndex = input.indexOf(endText);
+              const extractedText = input.substring(startIndex + startText.length, endIndex);
+              this.priceMultiplier = +extractedText.replace(/,/g, '.');;
+              this.currency = "USD";
+              this.recountTable();
+          });
+      });
     } else {
       this.priceMultiplier = 1;
       this.currency = "SNPS";
+      this.recountTable();
     }
-    this.recountTable();
   }
 }
