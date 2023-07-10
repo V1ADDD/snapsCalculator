@@ -223,7 +223,7 @@ export class AppComponent {
 
   changeCurrency() {
     if (this.priceMultiplier === 1) {
-      this.priceMultiplier = 0.095; // make parse price SNPS
+      this.priceMultiplier = 0.0095; // parse price SNPS
       this.currency = "USD";
     } else {
       this.priceMultiplier = 1;
