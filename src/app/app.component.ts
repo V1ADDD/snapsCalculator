@@ -207,6 +207,7 @@ export class AppComponent {
     await this.generateDateRange(new Date(this.start), new Date(this.finish));
     await this.delay(200);
     this.sumGot = 0;
+    let firstDay: boolean = true;
     for (let date of this.dates) {
       let sum: number = +this.generateSums("row" + date.id).toFixed(2);
       if (sum >= 0.99) {
@@ -216,9 +217,17 @@ export class AppComponent {
       document.getElementById("sum" + date.id).textContent = sum;
       // @ts-ignore
       document.getElementById("sumSNPS" + date.id).textContent = (sum * this.chosenGlassesInfo.earning * this.priceMultiplier).toFixed(2)
-      // @ts-ignore
-      document.getElementById("sumFixed" + date.id).textContent = ((sum - this.chosenGlassesInfo.fix) * this.chosenGlassesInfo.earning * this.priceMultiplier).toFixed(2);
-      this.sumGot += +((sum - this.chosenGlassesInfo.fix) * this.chosenGlassesInfo.earning * this.priceMultiplier).toFixed(2);
+      if (firstDay) {
+        // @ts-ignore
+        document.getElementById("sumFixed" + date.id).textContent = (sum * this.chosenGlassesInfo.earning * this.priceMultiplier).toFixed(2);
+        this.sumGot += +(sum * this.chosenGlassesInfo.earning * this.priceMultiplier).toFixed(2);
+        firstDay = false;
+      }
+      else {
+        // @ts-ignore
+        document.getElementById("sumFixed" + date.id).textContent = ((sum - this.chosenGlassesInfo.fix) * this.chosenGlassesInfo.earning * this.priceMultiplier).toFixed(2);
+        this.sumGot += +((sum - this.chosenGlassesInfo.fix) * this.chosenGlassesInfo.earning * this.priceMultiplier).toFixed(2);
+      }
     }
   }
 
@@ -252,5 +261,13 @@ export class AppComponent {
       this.currency = "SNPS";
       this.recountTable();
     }
+  }
+
+  getDiferenceInDays() : number {
+    const result = Math.abs(new Date(this.start).getTime() - new Date(this.finish).getTime()) / (1000 * 60 * 60 * 24);
+    if (result)
+      return result;
+    else
+      return 0;
   }
 }
