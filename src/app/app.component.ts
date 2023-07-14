@@ -341,6 +341,9 @@ export class AppComponent {
         daysCount: this.getDiferenceInDays()
       });
     }
+    else {
+      alert("Заполните информацию о текущих очках!");
+    }
   }
 
   prevGlasses(){
