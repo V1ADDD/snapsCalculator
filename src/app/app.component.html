@@ -1,6 +1,26 @@
 <div class="circle" [class.clicked]="priceMultiplier === 1" id="myCircle" (click)="changeCurrency()">
   <div class="circle-content">
-    <span class="text">{{currency}}</span>
+    <span class="text">USD</span>
+  </div>
+</div>
+<div style="top: 120px;" class="circle" [class.clicked]="!isWeb3" id="web3Circle" (click)="switchWeb()">
+  <div class="circle-content">
+    <span class="text">WEB3</span>
+  </div>
+</div>
+<div style="top: 220px;" class="circle" [class.clicked]="addedGlassesIndex===0" id="prevGlasses" (click)="prevGlasses()">
+  <div class="circle-content">
+    <span class="text"><</span>
+  </div>
+</div>
+<div style="top: 320px;" class="circle" [class.clicked]="addedGlassesIndex===addedGlasses.length-1" id="nextGlasses" (click)="nextGlasses()">
+  <div class="circle-content">
+    <span class="text">></span>
+  </div>
+</div>
+<div style="top: 420px;" class="circle" [class.clicked]="!(start && finish && chosenGlasses)" id="addGlasses" (click)="addGlasses()">
+  <div class="circle-content">
+    <span class="text">+</span>
   </div>
 </div>
 <div class="main">
@@ -17,12 +37,15 @@
     <p>Выберите дни, которые Вы пропустите, выбирая пункт "Добавить". Не рекомендую пропускать дни, т.к. это не выгодно. Можете убедится в этом, используя таблицу.</p>
     <select id="skipDays" name="skipDay" [(ngModel)]="skipDay">
       <option value="Добавить">Добавить</option>
+      <option *ngFor="let skippedDate of skippedDatesArray" value="{{skippedDate}}">{{skippedDate}}</option>
     </select>
     <input name="dateSkip" type="date" [(ngModel)]="skipDayValue" [disabled]="skipDay!='Добавить'" (change)="addSkipDay()">
     <p>!!! При пропуске 3ех дней подряд, очки ломаются и смогут быть отремонтированы только за 70% от их стоимости !!!</p>
   </form>
 </div>
-<h1>За {{getDiferenceInDays()}} дн. Вы заработаете {{sumGot | number:'1.0-2'}} {{currency}}</h1>
+<h1>За {{getDiferenceInDays()}} дн. с этих очков Вы заработаете {{sumGot | number:'1.0-2'}} {{currency}},<br> а в
+сумме {{countSumOverall() | number:'1.0-2'}} {{currency}}
+<ng-container *ngIf="isWeb3 && priceMultiplier === 1"> - ~{{getMaxDifferenceInDays()*0.001 | number:'1.0-3'}} BNB</ng-container> </h1>
 <p>В таблице вы можете явно видеть как разбиваются ваши разлоки, в зависимости от соответствующего показателя по дням. Также можете изучить вариант пропуска дней в целях получения снапсов из заблокированного кошелька и увидеть как это повлияет на будущий доход.</p>
 <div class="table">
   <table class="iksweb">

@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {delay} from "rxjs";
 
 interface Glasses {
   name: string;
@@ -14,6 +13,15 @@ interface DateUnlocks {
   date: string;
   amountToUnlock: number;
   unlockPercent: number;
+}
+
+interface GlassesInterface {
+  glasses: any;
+  start: any;
+  end: any;
+  skippedDates: string[];
+  sumSNPS: number;
+  daysCount: number;
 }
 
 @Component({
@@ -40,6 +48,18 @@ export class AppComponent {
   skippedDatesArray: string[] = [];
   priceMultiplier: number = 1;
   currency: string = "SNPS";
+  isWeb3: boolean = false;
+  addedGlasses: GlassesInterface[] = [
+    {
+      glasses: this.chosenGlasses,
+      start: undefined,
+      end: undefined,
+      skippedDates: this.skippedDatesArray,
+      sumSNPS: 0,
+      daysCount: 0
+    }
+  ]
+  addedGlassesIndex: number = 0;
 
   constructor(private http: HttpClient) {
     this.glasses = [
@@ -130,7 +150,6 @@ export class AppComponent {
     if (document.getElementById("skipDays")!.innerHTML.includes(this.skipDayValue)) {
       alert("Такая дата уже была добавлена!");
     } else {
-      document.getElementById("skipDays")!.innerHTML += "<option value='" + this.skipDayValue + "'>" + this.skipDayValue + "</option>";
       this.skipDay = this.skipDayValue;
       this.skippedDatesArray.push(this.skipDayValue);
       this.recountTable();
@@ -222,13 +241,29 @@ export class AppComponent {
         document.getElementById("sumFixed" + date.id).textContent = (sum * this.chosenGlassesInfo.earning * this.priceMultiplier).toFixed(2);
         this.sumGot += +(sum * this.chosenGlassesInfo.earning * this.priceMultiplier).toFixed(2);
         firstDay = false;
-      }
-      else {
+      } else {
         // @ts-ignore
         document.getElementById("sumFixed" + date.id).textContent = ((sum - this.chosenGlassesInfo.fix) * this.chosenGlassesInfo.earning * this.priceMultiplier).toFixed(2);
         this.sumGot += +((sum - this.chosenGlassesInfo.fix) * this.chosenGlassesInfo.earning * this.priceMultiplier).toFixed(2);
       }
     }
+    this.addedGlasses[this.addedGlassesIndex] = {
+      glasses: this.chosenGlasses,
+      start: this.start,
+      end: this.finish,
+      skippedDates: this.skippedDatesArray,
+      sumSNPS: this.sumGot / this.priceMultiplier,
+      daysCount: this.getDiferenceInDays()
+    }
+  }
+
+  countSumOverall(): number {
+    const arraySums: number[] = this.addedGlasses.map(obj => obj.sumSNPS * this.priceMultiplier);
+    let result: number = arraySums.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    if (this.priceMultiplier !== 1 && this.isWeb3) {
+      result -= 0.3 * this.getMaxDifferenceInDays();
+    }
+    return result;
   }
 
   changeCurrency() {
@@ -237,15 +272,15 @@ export class AppComponent {
 
       let responseClone: Response; // 1
       fetch(url)
-      .then(function (response) {
+        .then(function (response) {
           responseClone = response.clone(); // 2
           return response.json();
-      })
-      .then(function (data) {
-      }, (rejectionReason) => { // 3
+        })
+        .then(function (data) {
+        }, (rejectionReason) => { // 3
           responseClone.text() // 5
-          .then((bodyText) => {
-              const input = bodyText.slice(4300,4700);
+            .then((bodyText) => {
+              const input = bodyText.slice(4300, 4700);
               const startText = 'Цена SNPS/BUSD сегодня — ';
               const endText = ' $';
               const startIndex = input.indexOf(startText);
@@ -254,8 +289,8 @@ export class AppComponent {
               this.priceMultiplier = +extractedText.replace(/,/g, '.');
               this.currency = "USD";
               this.recountTable();
-          });
-      });
+            });
+        });
     } else {
       this.priceMultiplier = 1;
       this.currency = "SNPS";
@@ -263,11 +298,74 @@ export class AppComponent {
     }
   }
 
-  getDiferenceInDays() : number {
+  getDiferenceInDays(): number {
     const result = Math.abs(new Date(this.start).getTime() - new Date(this.finish).getTime()) / (1000 * 60 * 60 * 24);
     if (result)
       return result;
     else
       return 0;
+  }
+
+  getMaxDifferenceInDays(): number {
+    return Math.max(...this.addedGlasses.map(obj => obj.daysCount));
+  }
+
+  switchWeb() {
+    this.isWeb3 = !this.isWeb3;
+    this.recountTable();
+  }
+
+  addGlasses() {
+    if (this.start && this.finish && this.glasses) {
+      this.start = undefined;
+      this.finish = undefined;
+      this.skipDayValue = undefined;
+      this.chosenGlasses = "Newbie";
+      this.skipDay = "Добавить";
+      this.chosenGlassesInfo = {
+        name: "",
+        earning: 0,
+        unlock: 0,
+        fix: 0
+      };
+      this.dates = [];
+      this.sumGot = 0;
+      this.skippedDatesArray = [];
+      this.addedGlassesIndex = this.addedGlasses.length;
+      this.addedGlasses.push({
+        glasses: this.chosenGlasses,
+        start: undefined,
+        end: undefined,
+        skippedDates: this.skippedDatesArray,
+        sumSNPS: 0,
+        daysCount: this.getDiferenceInDays()
+      });
+    }
+  }
+
+  prevGlasses(){
+    if (this.addedGlassesIndex!==0) {
+      this.addedGlassesIndex -= 1;
+      this.start = this.addedGlasses[this.addedGlassesIndex].start;
+      this.finish = this.addedGlasses[this.addedGlassesIndex].end;
+      this.skipDayValue = undefined;
+      this.chosenGlasses = this.addedGlasses[this.addedGlassesIndex].glasses;
+      this.skipDay = "Добавить";
+      this.skippedDatesArray = this.addedGlasses[this.addedGlassesIndex].skippedDates;
+      this.recountTable();
+    }
+  }
+
+  nextGlasses(){
+    if (this.addedGlassesIndex!==this.addedGlasses.length-1) {
+      this.addedGlassesIndex += 1;
+      this.start = this.addedGlasses[this.addedGlassesIndex].start;
+      this.finish = this.addedGlasses[this.addedGlassesIndex].end;
+      this.skipDayValue = undefined;
+      this.chosenGlasses = this.addedGlasses[this.addedGlassesIndex].glasses;
+      this.skipDay = "Добавить";
+      this.skippedDatesArray = this.addedGlasses[this.addedGlassesIndex].skippedDates;
+      this.recountTable();
+    }
   }
 }

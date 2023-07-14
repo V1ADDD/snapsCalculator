@@ -1,27 +1,52 @@
+@font-face {
+    font-family: 'Cleanvertising';
+    src: local('Cleanvertising-Light'), url('fonts/cleanvertising-light.woff2') format('woff2'), url('fonts/cleanvertising-light.woff') format('woff'), url('fonts/cleanvertising-light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Cleanvertising';
+    src: local('Cleanvertising-Black'), url('fonts/cleanvertising-black.woff2') format('woff2'), url('fonts/cleanvertising-black.woff') format('woff'), url('fonts/cleanvertising-black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+* {
+  font-family: Cleanvertising, serif;
+}
+
 table.iksweb {
-	width: 100%;
-	border-collapse:collapse;
-	border-spacing:0;
-	height: auto;
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  height: auto;
 }
-table.iksweb,table.iksweb td, table.iksweb th {
-	border: 1px solid #595959;
-}
-table.iksweb td,table.iksweb th {
-	min-height:35px;
-  padding: 3px;
-	width: 30px;
-	height: 35px;
-}
+
+table.iksweb,
+table.iksweb td,
 table.iksweb th {
-	background: #347c99;
-	color: #fff;
-	font-weight: normal;
+  border: 1px solid #0050be;
 }
+
+table.iksweb td,
+table.iksweb th {
+  min-height: 35px;
+  padding: 3px 3px 3px 6px;
+  width: 30px;
+  height: 35px;
+}
+
+table.iksweb th {
+  color: #fff;
+  font-weight: normal;
+}
+
 .table {
   margin-inline: 10%;
   overflow: hidden;
   overflow-x: scroll;
+  color: #67a3ff;
+  font-weight: bold;
 }
 .main, h1 {
   text-align: center;
@@ -58,7 +83,6 @@ h1 {
   color: #3587ff;
   font-size: 36px;
   text-transform: uppercase;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 p {
@@ -69,14 +93,13 @@ p {
 }
 .circle {
   position: fixed;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
   top: 20px;
   right: 20px;
   bottom: 20px;
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background-color: #e2e2e2;
+  background-color: #3587ff;
   transition: all 0.3s ease;
   cursor: pointer;
 }
@@ -89,7 +112,7 @@ p {
 }
 
 .text {
-  color: #3587ff;
+  color: #e2e2e2;
   font-size: 24px;
   font-weight: bold;
 }
@@ -99,11 +122,19 @@ p {
 }
 
 .circle.clicked {
-  background-color: #3587ff;
+  background-color: #e2e2e2;
 }
 
 .circle.clicked > .circle-content > .text {
-  color: #e2e2e2;
+  color: #3587ff;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  width: 250px;
+  height: 30px;
+  color: transparent;
+  background: transparent;
 }
 
 @media screen and (max-width: 1020px) {
