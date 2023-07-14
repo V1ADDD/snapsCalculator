@@ -245,13 +245,13 @@ export class AppComponent {
       }, (rejectionReason) => { // 3
           responseClone.text() // 5
           .then((bodyText) => {
-              const input = bodyText.slice(4300,4500);
+              const input = bodyText.slice(4300,4700);
               const startText = 'Цена SNPS/BUSD сегодня — ';
               const endText = ' $';
               const startIndex = input.indexOf(startText);
               const endIndex = input.indexOf(endText);
               const extractedText = input.substring(startIndex + startText.length, endIndex);
-              this.priceMultiplier = +extractedText.replace(/,/g, '.');;
+              this.priceMultiplier = +extractedText.replace(/,/g, '.');
               this.currency = "USD";
               this.recountTable();
           });
